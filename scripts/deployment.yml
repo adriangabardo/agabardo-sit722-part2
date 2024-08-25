@@ -1,0 +1,39 @@
+# Write Kubernetes Deployment Script
+# kubectl apply -f scripts/deploy.yaml
+
+apiVersion: apps/v1 # Specifies the API version used for the Deployment resource
+kind: Deployment # Indicates that this is a Deployment resource, which manages a set of replicas of pods
+metadata:
+  name: books-catalog # The name of the Deployment resource, used for identification
+spec:
+  replicas: 1 # Defines the number of pod replicas to run; here, it’s set to run a single instance
+  selector:
+    matchLabels:
+      app: books-catalog # Specifies the label selector to identify the pods managed by this Deployment
+  template: # Defines the pod template used by the Deployment to create pods
+    metadata:
+      labels:
+        app: books-catalog # Labels assigned to pods, used by the selector to match the pods with this template
+    spec:
+      containers: # Specifies the list of containers that will be part of the pod
+        - name: books-catalog # The name of the container, used for identification within the pod
+          image: books-catalog:1 # The container image to use; ":1" denotes the image tag (version)
+          imagePullPolicy: Never # Ensures that Kubernetes never pulls the image version from a remote, using the local version
+          env: # List of environment variables to pass to the container
+            - name: PORT
+              value: "4001" # Sets the PORT environment variable within the container
+            - name: DATABASE_URL
+              value: postgresql://sit722_task62_user:NID4SlLWzaYheBZ34N48owgZzG0wOSbh@dpg-cr5g4vij1k6c7395gof0-a.oregon-postgres.render.com/sit722_task62 # Sets the DATABASE_URL environment variable with connection details to a PostgreSQL database
+---
+apiVersion: v1 # Specifies the API version used for the Service resource
+kind: Service # Indicates that this is a Service resource, which exposes the pods to network traffic
+metadata:
+  name: books-catalog # The name of the Service resource, used for identification
+spec:
+  selector:
+    app: books-catalog # Uses the label selector to associate the Service with the pods that have this label
+  type: LoadBalancer # Configures the Service to be exposed externally via a load balancer
+  ports: # Defines the port mappings for the Service
+    - protocol: TCP # Specifies the protocol for the Service (here, TCP)
+      port: 80 # The external port exposed by the Service to receive traffic
+      targetPort: 4001 # The internal port on the container where the Service forwards incoming traffic
