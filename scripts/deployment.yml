@@ -23,7 +23,7 @@ spec:
             - name: PORT
               value: "4001" # Sets the PORT environment variable within the container
             - name: DATABASE_URL
-              value: postgresql://sit722_task62_user:NID4SlLWzaYheBZ34N48owgZzG0wOSbh@dpg-cr5g4vij1k6c7395gof0-a.oregon-postgres.render.com/sit722_task62 # Sets the DATABASE_URL environment variable with connection details to a PostgreSQL database
+              value: $DATABASE_URL # Sets the DATABASE_URL environment variable with connection details to a PostgreSQL database
 ---
 apiVersion: v1 # Specifies the API version used for the Service resource
 kind: Service # Indicates that this is a Service resource, which exposes the pods to network traffic
